@@ -1,0 +1,70 @@
+.hero-bg {
+    background-image: linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)), url("/image/imagess.jpeg");
+    height: 500px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.cart-btn {
+  background: white; 
+  color: black;      
+  border: 1px solid black; 
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-weight: bold;
+}
+
+.cart-btn svg {
+    width: 20px;      
+    height: 20px;
+    fill: black;      
+}
+
+.cart-count {
+  color: #fff;
+  background-color: #f07f13; 
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.nav-toggle {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.checkout-btn {
+  width: 100%;
+  background-color: black;
+  color: white;
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.checkout-btn:hover {
+  background-color: #f07f13;
+  color: black;
+}
+
+.cart-panel.open { right: 0; }
+
+#overlay.show { display: block; }
+
+#cart-notification.show { display: block; opacity: 1; bottom: 20px; }
+
+.cart-count.visible { display: flex; opacity: 1; }

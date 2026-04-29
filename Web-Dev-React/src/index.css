@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Pacifico&display=swap');
+
+@import "tailwindcss";  
+
+.font-halal { font-family: 'Fredoka', sans-serif; }
+.font-munchies { font-family: 'Pacifico', cursive; }
+
+  body {
+    overflow-x: hidden;
+    font-family: Arial, sans-serif;
+    scroll-behavior: smooth;
+  }
+
+.halal-shadow {
+  text-shadow: 2px 2px 2px rgb(255, 255, 255);
+}
