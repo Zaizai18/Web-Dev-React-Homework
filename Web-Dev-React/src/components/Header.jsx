@@ -17,7 +17,7 @@ export default function Header({ page, setPage, isNavOpen, setIsNavOpen, cartCou
             <a 
               key={p} 
               onClick={() => setPage(p)}
-              className={`px-4 py-2 mt-2 font-bold uppercase cursor-pointer transition-colors hover:text-[#f07f13] ${page === p ? 'text-[#f07f13]' : 'text-white'}`}
+              className={`px-4 py-2 mt-0 font-bold uppercase cursor-pointer transition-colors hover:text-[#f07f13] ${page === p ? 'text-[#f07f13]' : 'text-white'}`}
             >
               {p}
             </a>
@@ -39,7 +39,7 @@ export default function Header({ page, setPage, isNavOpen, setIsNavOpen, cartCou
           </button>
         )}
 
-        <button className="md:hidden text-3xl mt-2" onClick={() => setIsNavOpen(!isNavOpen)}>
+        <button className="md:hidden text-4xl mt-2" onClick={() => setIsNavOpen(!isNavOpen)}>
           {isNavOpen ? '✕' : '☰'}
         </button>
       </div>
