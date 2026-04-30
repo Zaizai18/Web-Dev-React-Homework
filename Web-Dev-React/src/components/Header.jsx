@@ -12,7 +12,7 @@ export default function Header({ page, setPage, isNavOpen, setIsNavOpen, cartCou
       </div>
 
       <div className="flex items-center gap-4">
-        <nav className="hidden md:flex mt-1">
+        <nav className="hidden md:flex mt-2">
           {navItems.map((p) => (
             <a 
               key={p} 
