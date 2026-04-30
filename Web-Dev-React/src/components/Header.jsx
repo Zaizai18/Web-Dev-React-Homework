@@ -8,7 +8,7 @@ export default function Header({ page, setPage, isNavOpen, setIsNavOpen, cartCou
       <div className="flex items-center cursor-pointer" onClick={() => setPage('home')}>
         <h1 className="font-halal text-[25px] text-[#1f7a3b] halal-shadow ml-1">HALAL</h1>
         <img src={logo} alt="Logo" className="h-[40px] md:h-[50px] mx-0" />
-        <h1 className="font-munchies text-[25px] text-[#f07f13] mt-1">Munchies</h1>
+        <h1 className="font-munchies text-[25px] text-[#f07f13] mt-2">Munchies</h1>
       </div>
 
       <div className="flex items-center gap-4">
