@@ -1,3 +1,5 @@
+import aboutImg from '../assets/image/halal munchies.webp'; 
+
 export default function About() {
   return (
     <main className="mt-[100px] max-w-4xl mx-auto px-4 pb-20 text-center">
@@ -13,7 +15,7 @@ export default function About() {
 
       <div className="rounded-3xl overflow-hidden shadow-2xl border-4 border-white inline-block">
         <img 
-          src="/image/halal munchies.webp" 
+          src={aboutImg} 
           alt="Halal Munchies Store Front"
           className="max-w-full h-auto block"
         />

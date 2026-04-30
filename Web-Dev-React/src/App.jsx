@@ -2,13 +2,12 @@ import { useState } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Cart from './components/Cart';
-import Gallery from './components/gallery';
+import Gallery from './components/Gallery';
 import MenuCard from './components/MenuCard';
 import Home from './pages/Home';
 import Menu from './pages/Menu';
 import About from './pages/About';
 import Contact from './pages/Contact';
-
 
 export default function App() {
   const [page, setPage] = useState('home');
@@ -44,10 +43,15 @@ export default function App() {
 
       <Footer />
 
-      {/* Toast  */}
       {toast && (
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 bg-black/90 text-[#f07f13] px-8 py-3 rounded-full border-2 border-[#f07f13]/70 font-halal shadow-2xl z-[3000] animate-bounce">
-          {toast}
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[5000] w-max max-w-[90vw]">
+          <div 
+            className="bg-black/95 text-[#f07f13] px-6 py-2 rounded-full border-2 border-[#f07f13]/50 font-bold shadow-2xl animate-toast-spring flex items-center gap-3"
+          >
+          <span className="text-xs sm:text-sm font-bold tracking-tight whitespace-nowrap">
+              {toast}
+            </span>
+          </div>
         </div>
       )}
     </div>

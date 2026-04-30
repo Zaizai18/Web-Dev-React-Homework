@@ -1,17 +1,18 @@
+import logo from '../assets/image/Halal munchies logo.png';
+
 export default function Header({ page, setPage, isNavOpen, setIsNavOpen, cartCount, setIsCartOpen }) {
   const navItems = ['home', 'menu', 'about', 'contact'];
 
   return (
     <header className="bg-black text-white px-5 py-12 flex justify-between items-center fixed top-0 left-0 w-full z-[1000] h-[75px]">
       <div className="flex items-center cursor-pointer" onClick={() => setPage('home')}>
-        <h1 className="font-halal text-[25px] text-[#1f7a3b] halal-shadow ml-2 md:ml-2 mt-0">HALAL</h1>
-        <img src="/image/Halal munchies logo.png" alt="Logo" className="h-[40px] md:h-[50px] mx-0" />
-        <h1 className="font-munchies font-bold text-[22px] md:text-[25px] text-[#f07f13] mt-2">Munchies</h1>
+        <h1 className="font-halal text-[25px] text-[#1f7a3b] halal-shadow ml-1">HALAL</h1>
+        <img src={logo} alt="Logo" className="h-[40px] md:h-[50px] mx-0" />
+        <h1 className="font-munchies text-[25px] text-[#f07f13] mt-2">Munchies</h1>
       </div>
 
       <div className="flex items-center gap-4">
-        {/* Desktop */}
-        <nav className="hidden md:flex">
+        <nav className="hidden md:flex mt-2">
           {navItems.map((p) => (
             <a 
               key={p} 
@@ -23,11 +24,10 @@ export default function Header({ page, setPage, isNavOpen, setIsNavOpen, cartCou
           ))}
         </nav>
 
-        
         {page === 'menu' && (
           <button 
             onClick={() => setIsCartOpen(true)}
-            className="flex items-center gap-2 border border-white/60 px-3 py-1.5 mt-2 rounded-md font-bold hover:border-[#f07f13] relative transition-all"
+            className="flex items-center gap-2 border border-white/60 px-3 py-1.5 mt-4 rounded-md font-bold hover:border-[#f07f13] relative transition-all"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
               <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
@@ -39,12 +39,11 @@ export default function Header({ page, setPage, isNavOpen, setIsNavOpen, cartCou
           </button>
         )}
 
-        <button className="md:hidden text-3xl" onClick={() => setIsNavOpen(!isNavOpen)}>
+        <button className="md:hidden text-3xl mt-2" onClick={() => setIsNavOpen(!isNavOpen)}>
           {isNavOpen ? '✕' : '☰'}
         </button>
       </div>
 
-      {/* Mobile */}
       <nav className={`${isNavOpen ? 'max-h-[300px]' : 'max-h-0'} md:hidden absolute top-full left-0 w-full bg-black flex flex-col overflow-hidden transition-all duration-300 border-t border-gray-800`}>
         {navItems.map((p) => (
           <a key={p} onClick={() => { setPage(p); setIsNavOpen(false); }} className="p-4 text-center font-bold uppercase border-b border-gray-900 cursor-pointer">
