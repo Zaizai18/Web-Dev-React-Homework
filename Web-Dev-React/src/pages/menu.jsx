@@ -36,8 +36,10 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
 
   const updateQuantity = (name, delta) => {
     setCart(prev => prev.map(item => 
-      item.name === name ? { ...item, quantity: Math.max(1, item.quantity + delta) } : item
-    ));
+      item.name === name ? { ...item, quantity: item.quantity + delta } 
+      : item )
+      .filter(item => item.quantity > 0)
+    );
   };
 
   const removeFromCart = (name) => {
