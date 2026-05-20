@@ -57,8 +57,6 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
         body: JSON.stringify({ name: item.name, price: item.price, quantity: 1 })
       });
       
-      if (!res.ok) throw new Error("Failed to add to cart");
-      
       const savedItem = await res.json();
 
       setCart(prev => {
