@@ -29,14 +29,22 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/menu')
-      .then((res) => res.json())
+    fetch('https://halal-munchies-backend.onrender.com/api/menu')
+      .then((res) => {
+        if (!res.ok) throw new Error("Server responded with error");
+        return res.json();
+      })
       .then((data) => {
-        const localizedMenu = data.map(item => ({
-          ...item,
-          img: imageMap[item.img] || chickenPlatter
-        }));
-        setMenuItems(localizedMenu);
+        // SAFETY CHECK: Only map if data is an array
+        if (Array.isArray(data)) {
+          const localizedMenu = data.map(item => ({
+            ...item,
+            img: imageMap[item.img] || chickenPlatter
+          }));
+          setMenuItems(localizedMenu);
+        } else {
+          console.error("Data received is not an array:", data);
+        }
         setLoading(false);
       })
       .catch((err) => {
@@ -44,7 +52,7 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
         setLoading(false);
       });
   }, []);
-
+  
   const addToCart = (item) => {
     setCart(prev => {
       const exists = prev.find(i => i._id === item._id);
