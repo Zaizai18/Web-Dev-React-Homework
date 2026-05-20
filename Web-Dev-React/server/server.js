@@ -72,12 +72,25 @@ app.post('/api/cart', async (req, res) => {
   } catch (err) { res.status(500).json(err); }
 });
 
-app.get('/api/cart', async (req, res) => {
+app.post('/api/cart', async (req, res) => {
   try {
-    const items = await Cart.find({});
-    res.json(items);
-  } catch (err) {
-    res.status(500).json(err);
+    let item = await Cart.findOne({ name: req.body.name });
+
+    if (item) {
+      item.quantity += 1;
+      await item.save();
+      res.json(item);
+    } else {
+      const newItem = new Cart({
+        name: req.body.name,
+        price: req.body.price,
+        quantity: 1 
+      });
+      await newItem.save();
+      res.json(newItem);
+    }
+  } catch (err) { 
+    res.status(500).json(err); 
   }
 });
 
