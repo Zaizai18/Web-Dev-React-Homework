@@ -72,9 +72,7 @@ app.post('/api/cart', async (req, res) => {
       await newItem.save();
       res.json(newItem);
     }
-  } catch (err) { 
-    res.status(500).json({ error: "Failed to add item to cart" }); 
-  }
+  } catch (err) { res.status(500).json(err); }
 });
 
 const PORT = process.env.PORT || 5000;

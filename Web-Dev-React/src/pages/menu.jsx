@@ -30,9 +30,7 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Initial Data Fetching
   useEffect(() => {
-    // Fetch Menu
     fetch(`${API_BASE_URL}/api/menu`)
       .then((res) => res.json())
       .then((data) => {
@@ -45,7 +43,6 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
       })
       .catch((err) => { console.error(err); setLoading(false); });
 
-    // Fetch Cart from Database
     fetch(`${API_BASE_URL}/api/cart`)
       .then(res => res.json())
       .then(data => setCart(data))
@@ -59,7 +56,14 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
       body: JSON.stringify({ name: item.name, price: item.price, quantity: 1 })
     });
     const savedItem = await res.json();
-    setCart(prev => [...prev, savedItem]);
+
+    setCart(prev => {
+      const exists = prev.find(i => i.name === savedItem.name);
+      if (exists) {
+        return prev.map(i => i.name === savedItem.name ? savedItem : i);
+      }
+      return [...prev, savedItem];
+    });
     showNotification(`${item.name} added!`);
   };
 
