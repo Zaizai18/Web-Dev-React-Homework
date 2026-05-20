@@ -51,7 +51,6 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
 
   const addToCart = async (item) => {
     try {
-      console.log("Sending add request for:", item.name); // Add this
       const res = await fetch(`${API_BASE_URL}/api/cart`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -59,7 +58,6 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
       });
       
       const savedItem = await res.json();
-      console.log("Server responded with:", savedItem);
       
       setCart(prev => {
         const exists = prev.find(i => i.name === savedItem.name);

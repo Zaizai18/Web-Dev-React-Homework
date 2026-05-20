@@ -60,9 +60,7 @@ app.post('/api/orders', async (req, res) => {
 app.post('/api/cart', async (req, res) => {
   try {
     const itemName = req.body.name.trim();
-
     let item = await Cart.findOne({ name: { $regex: new RegExp("^" + itemName + "$", "i") } });
-
     if (item) {
       item.quantity += 1;
       await item.save();
