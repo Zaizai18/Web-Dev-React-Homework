@@ -3,7 +3,7 @@ export default function MenuCard({ item, onAdd }) {
     <div className="w-[310px] p-6 shadow-lg border border-gray-100 rounded-xl text-center hover:-translate-y-2 transition-transform bg-white">
       <img 
         src={item.img} 
-        style={{ height: item.h || 'auto' }} 
+        style={{ height: item.h || '160px' }} 
         className="w-full object-contain mb-4 mx-auto" 
         alt={item.name} 
       />

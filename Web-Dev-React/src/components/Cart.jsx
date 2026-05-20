@@ -1,6 +1,39 @@
 import '../App.css';
 
 export default function Cart({ isOpen, onClose, cart, total, clearCart, updateQuantity, removeFromCart }) {
+  
+  const handleCheckout = async () => {
+    if (cart.length === 0) return;
+
+    const orderData = {
+      items: cart.map(item => ({
+        menuItemId: item._id, 
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price
+      })),
+      totalAmount: total
+    };
+
+    try {
+      const response = await fetch('http://localhost:5000/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData)
+      });
+
+      if (response.ok) {
+        alert('Checkout complete! Order successfully logged inside your live database.');
+        clearCart();
+        onClose();
+      } else {
+        alert('Server encountered an issue recording your order.');
+      }
+    } catch (error) {
+      console.error('Error connecting to backend database endpoints:', error);
+    }
+  };
+
   return (
     <>
       <div className={`fixed top-0 right-0 h-full w-full sm:w-[350px] bg-white z-[2000] shadow-2xl transition-transform duration-300 transform ${isOpen ? 'translate-x-0' : 'translate-x-full'} border-l border-black flex flex-col cart-container-custom`}>
@@ -9,13 +42,12 @@ export default function Cart({ isOpen, onClose, cart, total, clearCart, updateQu
           <button onClick={onClose} className="text-[35px] font-light cursor-pointer hover:opacity-60 transition-opacity border-none bg-transparent">✕</button>
         </div>
 
-        
         <div className="flex-1 overflow-y-auto p-[10px] flex flex-col gap-2">
           {cart.length === 0 ? (
             <p className="text-[#1f7a3b] font-bold text-[25px] text-center mt-[40px]">Your cart is empty</p>
           ) : (
-            cart.map((item, idx) => (
-              <div key={idx} className="bg-[#76ab86] p-[12px] rounded-[10px] flex justify-between items-center text-white">
+            cart.map((item) => (
+              <div key={item._id} className="bg-[#76ab86] p-[12px] rounded-[10px] flex justify-between items-center text-white">
                 <div className="flex-1 pr-2">
                   <p className="font-bold text-[14px] uppercase m-0 text-black">{item.name}</p>
                 </div>
@@ -26,12 +58,12 @@ export default function Cart({ isOpen, onClose, cart, total, clearCart, updateQu
                   </div>
 
                   <div className="flex items-center bg-[#f28e2c] rounded-[5px] overflow-hidden border border-black/20 h-[28px]">
-                    <button onClick={() => updateQuantity(item.name, -1)} className="px-2.5 text-black font-bold hover:bg-black/10 transition-colors border-none bg-transparent cursor-pointer">−</button>
+                    <button onClick={() => updateQuantity(item._id, -1)} className="px-2.5 text-black font-bold hover:bg-black/10 transition-colors border-none bg-transparent cursor-pointer">−</button>
                     <span className="px-3 text-black font-bold text-[12px]">{item.quantity}</span>
-                    <button onClick={() => updateQuantity(item.name, 1)} className="px-2.5 text-black font-bold hover:bg-black/10 transition-colors border-none bg-transparent cursor-pointer">+</button>
+                    <button onClick={() => updateQuantity(item._id, 1)} className="px-2.5 text-black font-bold hover:bg-black/10 transition-colors border-none bg-transparent cursor-pointer">+</button>
                   </div>
 
-                  <button onClick={() => removeFromCart(item.name)} className="bg-black text-white text-[10px] font-bold uppercase px-3 py-1.5 rounded-md hover:bg-red-700 transition-colors border-none cursor-pointer">
+                  <button onClick={() => removeFromCart(item._id)} className="bg-black text-white text-[10px] font-bold uppercase px-3 py-1.5 rounded-md hover:bg-red-700 transition-colors border-none cursor-pointer">
                     Remove
                   </button>
                 </div>
@@ -46,7 +78,7 @@ export default function Cart({ isOpen, onClose, cart, total, clearCart, updateQu
             <span>${total.toFixed(2)}</span>
           </div>
           
-          <button className="checkout-btn">
+          <button onClick={handleCheckout} className="checkout-btn">
             Proceed to Checkout
           </button>
           
