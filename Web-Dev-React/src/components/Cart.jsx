@@ -1,7 +1,6 @@
 import '../App.css';
 
 export default function Cart({ isOpen, onClose, cart, total, clearCart, updateQuantity, removeFromCart }) {
-  
   const handleCheckout = async () => {
     if (cart.length === 0) return;
 
@@ -23,8 +22,14 @@ export default function Cart({ isOpen, onClose, cart, total, clearCart, updateQu
       });
 
       if (response.ok) {
-        alert('Checkout complete! Order successfully logged inside your live database.');
-        clearCart();
+        alert('Your order has been placed! Thank you for shopping with us.');
+        for (const item of cart) {
+          await fetch(`https://halal-munchies-backend.onrender.com/api/cart/${item._id}`, {
+            method: 'DELETE'
+          });
+        }
+        
+        clearCart(); 
         onClose();
       } else {
         alert('Server encountered an issue recording your order.');
