@@ -75,6 +75,14 @@ app.post('/api/cart', async (req, res) => {
   } catch (err) { res.status(500).json(err); }
 });
 
+app.put('/api/cart/:id', async (req, res) => {
+  try {
+    const updated = await Cart.findByIdAndUpdate(req.params.id, 
+      { quantity: req.body.quantity }, { new: true });
+    res.json(updated);
+  } catch (err) { res.status(500).json(err); }
+}); 
+
 app.delete('/api/cart/:id', async (req, res) => {
   try {
     await Cart.findByIdAndDelete(req.params.id);
