@@ -75,6 +75,13 @@ app.post('/api/cart', async (req, res) => {
   } catch (err) { res.status(500).json(err); }
 });
 
+app.delete('/api/cart/:id', async (req, res) => {
+  try {
+    await Cart.findByIdAndDelete(req.params.id);
+    res.status(200).send("Item removed from database");
+  } catch (err) { res.status(500).json(err); }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
