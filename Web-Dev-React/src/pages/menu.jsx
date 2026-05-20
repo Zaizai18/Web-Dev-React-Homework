@@ -35,7 +35,6 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
         return res.json();
       })
       .then((data) => {
-        // SAFETY CHECK: Only map if data is an array
         if (Array.isArray(data)) {
           const localizedMenu = data.map(item => ({
             ...item,
@@ -52,7 +51,7 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
         setLoading(false);
       });
   }, []);
-  
+
   const addToCart = (item) => {
     setCart(prev => {
       const exists = prev.find(i => i._id === item._id);

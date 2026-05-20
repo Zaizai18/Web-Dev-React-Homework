@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const app = express();
 
 app.use(cors({
-  origin: ["http://localhost:5173", "https://your-frontend-link-here.onrender.com"]
+  origin: ["http://localhost:5173", "https://halal-munchies-backend.onrender.com"]
 }));
 app.use(express.json());
 
