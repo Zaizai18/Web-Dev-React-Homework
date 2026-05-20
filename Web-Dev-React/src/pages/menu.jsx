@@ -51,19 +51,28 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
 
   const addToCart = async (item) => {
     try {
+      console.log("Sending add request for:", item.name); // Add this
       const res = await fetch(`${API_BASE_URL}/api/cart`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: item.name, price: item.price, quantity: 1 })
+        body: JSON.stringify({ name: item.name, price: item.price })
       });
+      
       const savedItem = await res.json();
+      console.log("Server responded with:", savedItem);
+      
       setCart(prev => {
         const exists = prev.find(i => i.name === savedItem.name);
-        if (exists) return prev.map(i => i.name === savedItem.name ? savedItem : i);
+        if (exists) {
+          return prev.map(i => i.name === savedItem.name ? savedItem : i);
+        }
         return [...prev, savedItem];
       });
+      
       showNotification(`${item.name} added!`);
-    } catch (err) { console.error("Add to cart error:", err); }
+    } catch (err) { 
+      console.error("Add to cart error:", err); 
+    }
   };
 
   const updateQuantity = async (id, delta) => {
@@ -87,7 +96,6 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
   const removeFromCart = async (id) => {
     await fetch(`${API_BASE_URL}/api/cart/${id}`, { method: 'DELETE' });
     setCart(prev => prev.filter(item => item._id !== id));
-    showNotification("Item removed!");
   };
 
   const clearCart = async () => {
@@ -95,7 +103,6 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
       const response = await fetch(`${API_BASE_URL}/api/cart`, { method: 'DELETE' });
       if (response.ok) {
         setCart([]); 
-        showNotification("Cart cleared!");
       }
     } catch (error) {
       console.error("Error clearing cart:", error);

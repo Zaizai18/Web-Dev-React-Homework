@@ -7,7 +7,6 @@ const mongoose = require('mongoose');
 const app = express();
 
 app.use(cors()); 
-
 app.use(express.json());
 
 const mongoURI = process.env.MONGODB_URI;
@@ -33,6 +32,12 @@ const Order = mongoose.model('Order', new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 }), 'orders');
 
+const Cart = mongoose.model('Cart', new mongoose.Schema({ 
+  name: String, 
+  price: Number, 
+  quantity: Number 
+}), 'carts');
+
 app.get('/api/menu', async (req, res) => {
   try {
     const dishes = await Menu.find({});
@@ -52,37 +57,19 @@ app.post('/api/orders', async (req, res) => {
   }
 });
 
-const Cart = mongoose.model('Cart', new mongoose.Schema({ 
-  name: String, 
-  price: Number, 
-  quantity: Number 
-}), 'carts');
-
 app.post('/api/cart', async (req, res) => {
   try {
-    await Cart.deleteMany({ name: req.body.name }); 
-    
-    const newItem = new Cart({
-      name: req.body.name,
-      price: req.body.price,
-      quantity: 1 
-    });
-    await newItem.save();
-    res.json(newItem);
-  } catch (err) { res.status(500).json(err); }
-});
+    const itemName = req.body.name.trim();
 
-app.post('/api/cart', async (req, res) => {
-  try {
-    let item = await Cart.findOne({ name: req.body.name });
+    let item = await Cart.findOne({ name: { $regex: new RegExp("^" + itemName + "$", "i") } });
 
     if (item) {
       item.quantity += 1;
       await item.save();
-      res.json(item);
+      res.json(item); 
     } else {
       const newItem = new Cart({
-        name: req.body.name,
+        name: itemName,
         price: req.body.price,
         quantity: 1 
       });
@@ -90,7 +77,17 @@ app.post('/api/cart', async (req, res) => {
       res.json(newItem);
     }
   } catch (err) { 
+    console.error("Server Error:", err);
     res.status(500).json(err); 
+  }
+});
+
+app.get('/api/cart', async (req, res) => {
+  try {
+    const items = await Cart.find({});
+    res.json(items);
+  } catch (err) {
+    res.status(500).json(err);
   }
 });
 

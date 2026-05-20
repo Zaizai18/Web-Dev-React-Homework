@@ -32,7 +32,6 @@ export default function Cart({ isOpen, onClose, cart, total, clearCart, updateQu
       console.error('Error during checkout:', error);
     }
   };
-
   return (
     <>
       <div className={`fixed top-0 right-0 h-full w-full sm:w-[350px] bg-white z-[2000] shadow-2xl transition-transform duration-300 transform ${isOpen ? 'translate-x-0' : 'translate-x-full'} border-l border-black flex flex-col cart-container-custom`}>
