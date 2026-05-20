@@ -22,14 +22,8 @@ export default function Cart({ isOpen, onClose, cart, total, clearCart, updateQu
       });
 
       if (response.ok) {
-        for (const item of cart) {
-          await fetch(`https://halal-munchies-backend.onrender.com/api/cart/${item._id}`, {
-            method: 'DELETE'
-          });
-        }
-        
-        alert('Order placed successfully! Cart has been cleared.');
-        clearCart(); 
+        await clearCart(); 
+        alert('Order placed successfully!');
         onClose();
       } else {
         alert('There was an issue recording your order.');

@@ -56,25 +56,19 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: item.name, price: item.price, quantity: 1 })
       });
-      
       const savedItem = await res.json();
-
       setCart(prev => {
         const exists = prev.find(i => i.name === savedItem.name);
-        if (exists) {
-          return prev.map(i => i.name === savedItem.name ? savedItem : i);
-        }
+        if (exists) return prev.map(i => i.name === savedItem.name ? savedItem : i);
         return [...prev, savedItem];
       });
-      
       showNotification(`${item.name} added!`);
-    } catch (err) {
-      console.error("Add to cart error:", err);
-    }
+    } catch (err) { console.error("Add to cart error:", err); }
   };
 
   const updateQuantity = async (id, delta) => {
     const item = cart.find(i => i._id === id);
+    if (!item) return;
     const newQty = item.quantity + delta;
 
     if (newQty <= 0) {
@@ -96,6 +90,18 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
     showNotification("Item removed!");
   };
 
+  const clearCart = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/cart`, { method: 'DELETE' });
+      if (response.ok) {
+        setCart([]); 
+        showNotification("Cart cleared!");
+      }
+    } catch (error) {
+      console.error("Error clearing cart:", error);
+    }
+  };
+
   const total = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
 
   if (loading) {
@@ -111,9 +117,13 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
         ))}
       </div>
       <Cart 
-        isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} 
-        cart={cart} total={total} clearCart={() => setCart([])}
-        updateQuantity={updateQuantity} removeFromCart={removeFromCart}
+        isOpen={isCartOpen} 
+        onClose={() => setIsCartOpen(false)} 
+        cart={cart} 
+        total={total} 
+        clearCart={clearCart} 
+        updateQuantity={updateQuantity} 
+        removeFromCart={removeFromCart}
       />
     </main>
   );

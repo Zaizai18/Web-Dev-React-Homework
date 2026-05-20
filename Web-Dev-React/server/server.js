@@ -6,9 +6,8 @@ const mongoose = require('mongoose');
 
 const app = express();
 
-app.use(cors({
-  origin: ["http://localhost:5173", "https://halal-munchies-backend.onrender.com", "https://zaizai18.github.io/Web-Dev-React-Homework/"]
-}));
+app.use(cors()); 
+
 app.use(express.json());
 
 const mongoURI = process.env.MONGODB_URI;
@@ -61,18 +60,25 @@ const Cart = mongoose.model('Cart', new mongoose.Schema({
 
 app.post('/api/cart', async (req, res) => {
   try {
-    const existingItem = await Cart.findOne({ name: req.body.name });
+    await Cart.deleteMany({ name: req.body.name }); 
     
-    if (existingItem) {
-      existingItem.quantity += 1;
-      await existingItem.save();
-      res.json(existingItem);
-    } else {
-      const newItem = new Cart(req.body);
-      await newItem.save();
-      res.json(newItem);
-    }
+    const newItem = new Cart({
+      name: req.body.name,
+      price: req.body.price,
+      quantity: 1 
+    });
+    await newItem.save();
+    res.json(newItem);
   } catch (err) { res.status(500).json(err); }
+});
+
+app.get('/api/cart', async (req, res) => {
+  try {
+    const items = await Cart.find({});
+    res.json(items);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 app.put('/api/cart/:id', async (req, res) => {
@@ -83,11 +89,22 @@ app.put('/api/cart/:id', async (req, res) => {
   } catch (err) { res.status(500).json(err); }
 }); 
 
+app.delete('/api/cart', async (req, res) => {
+  try {
+    await Cart.deleteMany({}); 
+    res.status(200).send("Cart cleared in database");
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 app.delete('/api/cart/:id', async (req, res) => {
   try {
     await Cart.findByIdAndDelete(req.params.id);
-    res.status(200).send("Item removed from database");
-  } catch (err) { res.status(500).json(err); }
+    res.status(200).send("Item removed from cart");
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 const PORT = process.env.PORT || 5000;
