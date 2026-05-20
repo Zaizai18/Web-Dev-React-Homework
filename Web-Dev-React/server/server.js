@@ -53,6 +53,34 @@ app.post('/api/orders', async (req, res) => {
   }
 });
 
+const Cart = mongoose.model('Cart', new mongoose.Schema({ 
+  name: String, 
+  price: Number, 
+  quantity: Number 
+}), 'carts');
+
+app.get('/api/cart', async (req, res) => {
+  const items = await Cart.find({});
+  res.json(items);
+});
+
+app.post('/api/cart', async (req, res) => {
+  const newItem = new Cart(req.body);
+  await newItem.save();
+  res.json(newItem);
+});
+
+app.put('/api/cart/:id', async (req, res) => {
+  const updated = await Cart.findByIdAndUpdate(req.params.id, 
+    { quantity: req.body.quantity }, { new: true });
+  res.json(updated);
+});
+
+app.delete('/api/cart/:id', async (req, res) => {
+  await Cart.findByIdAndDelete(req.params.id);
+  res.status(200).send("Item removed");
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

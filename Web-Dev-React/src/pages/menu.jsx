@@ -12,6 +12,8 @@ import chickenCombo from '../assets/image/chicken sandwhich combo.jpeg';
 import redVelvet from '../assets/image/red velvet.jpeg';
 import tenders from '../assets/image/tenders.png';
 
+const API_BASE_URL = 'https://halal-munchies-backend.onrender.com';
+
 const imageMap = {
   "chicken-platter": chickenPlatter,
   "combo-platter": comboPlatter,
@@ -28,47 +30,60 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Initial Data Fetching
   useEffect(() => {
-    fetch('https://halal-munchies-backend.onrender.com/api/menu')
-      .then((res) => {
-        if (!res.ok) throw new Error("Server responded with error");
-        return res.json();
-      })
+    // Fetch Menu
+    fetch(`${API_BASE_URL}/api/menu`)
+      .then((res) => res.json())
       .then((data) => {
-        if (Array.isArray(data)) {
-          const localizedMenu = data.map(item => ({
-            ...item,
-            img: imageMap[item.img] || chickenPlatter
-          }));
-          setMenuItems(localizedMenu);
-        } else {
-          console.error("Data received is not an array:", data);
-        }
+        const localizedMenu = data.map(item => ({
+          ...item,
+          img: imageMap[item.img] || chickenPlatter
+        }));
+        setMenuItems(localizedMenu);
         setLoading(false);
       })
-      .catch((err) => {
-        console.error("Error connecting to database API server:", err);
-        setLoading(false);
-      });
+      .catch((err) => { console.error(err); setLoading(false); });
+
+    // Fetch Cart from Database
+    fetch(`${API_BASE_URL}/api/cart`)
+      .then(res => res.json())
+      .then(data => setCart(data))
+      .catch(err => console.error("Error loading cart:", err));
   }, []);
 
-  const addToCart = (item) => {
-    setCart(prev => {
-      const exists = prev.find(i => i._id === item._id);
-      if (exists) return prev.map(i => i._id === item._id ? {...i, quantity: i.quantity + 1} : i);
-      return [...prev, {...item, quantity: 1}];
+  const addToCart = async (item) => {
+    const res = await fetch(`${API_BASE_URL}/api/cart`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: item.name, price: item.price, quantity: 1 })
     });
+    const savedItem = await res.json();
+    setCart(prev => [...prev, savedItem]);
     showNotification(`${item.name} added!`);
   };
 
-  const updateQuantity = (id, delta) => {
-    setCart(prev => prev.map(item => 
-      item._id === id ? { ...item, quantity: item.quantity + delta } : item 
-    ).filter(item => item.quantity > 0));
+  const updateQuantity = async (id, delta) => {
+    const item = cart.find(i => i._id === id);
+    const newQty = item.quantity + delta;
+
+    if (newQty <= 0) {
+      removeFromCart(id);
+      return;
+    }
+
+    await fetch(`${API_BASE_URL}/api/cart/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ quantity: newQty })
+    });
+    setCart(prev => prev.map(i => i._id === id ? { ...i, quantity: newQty } : i));
   };
 
-  const removeFromCart = (id) => {
+  const removeFromCart = async (id) => {
+    await fetch(`${API_BASE_URL}/api/cart/${id}`, { method: 'DELETE' });
     setCart(prev => prev.filter(item => item._id !== id));
+    showNotification("Item removed!");
   };
 
   const total = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
