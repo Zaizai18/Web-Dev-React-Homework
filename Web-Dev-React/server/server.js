@@ -61,11 +61,8 @@ const Cart = mongoose.model('Cart', new mongoose.Schema({
 
 app.put('/api/cart/:id', async (req, res) => {
   try {
-    const updated = await Cart.findByIdAndUpdate(
-      req.params.id, 
-      { quantity: req.body.quantity }, 
-      { new: true }
-    );
+    const updated = await Cart.findByIdAndUpdate(req.params.id, 
+      { quantity: req.body.quantity }, { new: true });
     res.json(updated);
   } catch (err) { res.status(500).json(err); }
 });
@@ -73,7 +70,7 @@ app.put('/api/cart/:id', async (req, res) => {
 app.delete('/api/cart/:id', async (req, res) => {
   try {
     await Cart.findByIdAndDelete(req.params.id);
-    res.status(200).send("Item removed from database");
+    res.status(200).send("Item removed");
   } catch (err) { res.status(500).json(err); }
 });
 

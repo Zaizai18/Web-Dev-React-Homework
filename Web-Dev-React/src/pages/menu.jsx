@@ -50,23 +50,30 @@ export default function Menu({ cart, setCart, isCartOpen, setIsCartOpen, showNot
   }, []);
 
   const addToCart = async (item) => {
-  const res = await fetch(`${API_BASE_URL}/api/cart`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name: item.name, price: item.price, quantity: 1 })
-  });
-  const savedItem = await res.json();
-  
-  setCart(prev => {
-    const exists = prev.find(i => i.name === savedItem.name);
-    if (exists) {
-      return prev.map(i => i.name === savedItem.name ? savedItem : i);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/cart`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: item.name, price: item.price, quantity: 1 })
+      });
+      
+      if (!res.ok) throw new Error("Failed to add to cart");
+      
+      const savedItem = await res.json();
+
+      setCart(prev => {
+        const exists = prev.find(i => i.name === savedItem.name);
+        if (exists) {
+          return prev.map(i => i.name === savedItem.name ? savedItem : i);
+        }
+        return [...prev, savedItem];
+      });
+      
+      showNotification(`${item.name} added!`);
+    } catch (err) {
+      console.error("Add to cart error:", err);
     }
-    return [...prev, savedItem];
-  });
-  
-  showNotification(`${item.name} added!`);
-};
+  };
 
   const updateQuantity = async (id, delta) => {
     const item = cart.find(i => i._id === id);
